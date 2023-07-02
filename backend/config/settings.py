@@ -43,8 +43,12 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS= [
+THIRD_PARTY_APPS = [
     'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'djoser',
+    'versatileimagefield',
 ]
 
 LOCAL_APPS = [
@@ -56,6 +60,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -139,3 +144,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+VERSATILEIMAGEFIELD_RENDITION_KEY_SETS = {
+    'product_image': [
+        ('full_size', 'url'),
+        ('thumbnail', 'thumbnail__100x100'),
+        ('medium_square_thumbnail', 'thumbnail__500x500'),
+        ('medium_square_crop', 'crop__300x400'),
+        ('small_square_crop', 'crop__50x50')
+    ]
+}
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8080',
+]
