@@ -1,7 +1,7 @@
 <template>
   <div class="homepage">
     <div class="homepage__head box has-background-primary-light">
-      <h2 class="title is-2">Welcome to our <span style="color: gold">Magazine</span></h2>
+      <h2 class="title is-2">Find your <span style="color: gold">Treasure</span></h2>
       <h4 class="title is-4">Latest products:</h4>
     </div>
     <div class="homepage__body">
