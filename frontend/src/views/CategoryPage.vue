@@ -2,11 +2,11 @@
   <div class="page">
     <div class="page__head box has-background-primary-light">
       <h2 class="title is-2">Find your <span style="color: gold">Treasure</span></h2>
-      <h4 class="title is-4">Latest products:</h4>
+      <h4 class="title is-4">Latest products in category <span style="color: green">{{ category }}:</span></h4>
     </div>
     <div class="page__body">
       <div class="columns is-multiline is-desktop">
-        <div class="column is-2" v-for="product in latestProducts" :key="product.id">
+        <div class="column is-2" v-for="product in products" :key="product.id">
           <div class="card p-1">
             <div class="card-image">
               <figure class="image is-3by4">
@@ -50,37 +50,55 @@
 </template>
 
 <script>
-import axios from "axios"
+import axios from "axios";
+import {toast} from "bulma-toast";
 
 export default {
-  name: 'Home',
+  name: "CategoryPage",
   data() {
     return {
-      latestProducts: [],
+      category: '',
+      products: []
     }
   },
   mounted() {
-    this.getLatestProducts()
+    this.getProducts()
+  },
+  watch: {
+    $route(to, from) {
+      if (to.name === 'categoryPage') {
+        this.getProducts()
+      }
+    }
   },
   methods: {
-    async getLatestProducts() {
+    async getProducts() {
+      this.category = this.$route.params.category_slug,
       document.title = 'SecondhandTreasures'
       this.$store.commit('setIsLoading', true)
-      await axios
-          .get('/api/v1/latest-products')
+      await axios.get(`/api/v1/${this.category}`)
           .then(response => {
-            this.latestProducts = response.data
+            this.products = response.data.products
           })
-          .catch(error => {
-            console.log(error)
+          .catch(err => {
+            console.log(err)
+            toast({
+              message: 'Something going wrong',
+              type: "is-warning",
+              position: "top-center",
+              duration: 2000,
+              pauseOnHover: true,
+              dismissible: true,
+            })
           })
+
       this.$store.commit('setIsLoading', false)
-    },
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .field {
   display: flex;
   justify-content: space-between;

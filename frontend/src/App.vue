@@ -18,6 +18,25 @@
           <router-link to="" class="navbar-item">Link 1</router-link>
           <router-link to="" class="navbar-item">Link 2</router-link>
 
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              Categories
+            </a>
+
+            <div class="navbar-dropdown">
+              <div class="navbar-item dropdown-item" v-for="category in allCategories" :key="category.id">
+                <div class="cats">
+                  <router-link :to="category.get_absolute_url" class="cat-name">
+                    {{ category.name }}
+                  </router-link>
+                  <span class="cat-products-count has-text-success">
+                      {{ category.products_count }}
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="navbar-item">
             <div class="buttons">
               <router-link to="/log-in" class="button is-light">
@@ -57,6 +76,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'App',
   data() {
@@ -65,6 +86,7 @@ export default {
       cart: {
         items: [],
       },
+      allCategories: []
     }
   },
   beforeCreate() {
@@ -72,6 +94,7 @@ export default {
   },
   mounted() {
     this.cart = this.$store.state.cart
+    this.getAllCategories()
   },
   computed: {
     cartTotalLength() {
@@ -81,9 +104,22 @@ export default {
       }
       return totalLength
     }
+  },
+  methods: {
+    async getAllCategories() {
+      await axios
+          .get('/api/v1/all-categories')
+          .then(response => {
+            this.allCategories = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    }
   }
 }
 </script>
+
 
 <style lang="scss">
 @import "../node_modules/bulma";
@@ -105,6 +141,13 @@ export default {
 .footer {
   max-height: 50px;
   padding: 15px;
+}
+
+.cats {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
 }
 
 /*Loading Bar*/
