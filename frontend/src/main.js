@@ -15,9 +15,10 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import {faCartShopping} from '@fortawesome/free-solid-svg-icons'
 import {faUser} from '@fortawesome/free-solid-svg-icons'
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 
 /* add icons to the library */
-library.add(faCartShopping, faUser)
+library.add(faCartShopping, faUser, faSearch)
 
 
 const secondhandTreasures = createApp(App)

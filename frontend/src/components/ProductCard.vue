@@ -17,7 +17,7 @@
         <div class="content">
           <div class="product-description" v-if="product.description">
             <hr>
-            <p>{{ product.description }}</p>
+            <p class="product-description__desript">{{ product.description }}</p>
           </div>
           <div class="product-description" v-else>
             <hr>
@@ -27,10 +27,10 @@
       </div>
       <div class="card-footer">
         <div class="field">
-          <div class="control is-expanded pt-2"><strong><span style="color: #42b983">$</span> {{ product.price }}</strong></div>
+          <div class="control is-expanded mt-3"><strong><span style="color: #42b983">$</span> {{ product.price }}</strong></div>
           <div class="control">
             <router-link :to="product.get_absolute_url">
-              <button class="button is-primary">Detail..</button>
+              <button class="button is-primary mt-1 p-2">Detail..</button>
             </router-link>
           </div>
         </div>
@@ -67,4 +67,10 @@ export default {
   display: block;
   margin-top: auto;
 }
+
+.product-description__desript {
+  max-height: 100px;
+  overflow: hidden;
+}
+
 </style>

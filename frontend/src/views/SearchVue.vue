@@ -1,15 +1,14 @@
 <template>
   <div class="page">
     <div class="page__head box has-background-primary-light">
-      <h2 class="title is-2">Find your <span style="color: gold">Treasure</span></h2>
-      <h4 class="title is-4">Latest products in category <span style="color: green">{{ category }}:</span></h4>
+      <h2 class="title is-2">search by query <span style="color: gold">{{ query }}</span>:</h2>
     </div>
     <div class="page__body">
       <div class="columns is-multiline is-desktop">
         <ProductCard
-          v-for="product in products"
-          :key="product.id"
-          :product="product"
+            v-for="product in products"
+            :key="product.id"
+            :product="product"
         />
       </div>
     </div>
@@ -18,39 +17,37 @@
 
 <script>
 import axios from "axios";
-import {toast} from "bulma-toast";
 
 import ProductCard from "@/components/ProductCard";
+import {toast} from "bulma-toast";
 
 export default {
-  name: "CategoryPage",
+  name: "SearchVue",
   components: {
-    ProductCard
+    ProductCard,
   },
   data() {
     return {
-      category: '',
-      products: []
+      products: [],
+      query: '',
     }
   },
   mounted() {
-    this.getProducts()
-  },
-  watch: {
-    $route(to, from) {
-      if (to.name === 'categoryPage') {
-        this.getProducts()
-      }
+    document.title = 'search'
+    let url = window.location.search.substring(1)
+    let params = new URLSearchParams(url)
+    if (params.get('query')) {
+      this.query = params.get('query')
+      this.performSearch()
     }
   },
   methods: {
-    async getProducts() {
-      this.category = this.$route.params.category_slug,
+    async performSearch() {
       document.title = `category: ${this.category}`
       this.$store.commit('setIsLoading', true)
-      await axios.get(`/api/v1/${this.category}`)
+      await axios.post('/api/v1/search/', {'query': this.query})
           .then(response => {
-            this.products = response.data.products
+            this.products = response.data
           })
           .catch(err => {
             console.log(err)
@@ -71,4 +68,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

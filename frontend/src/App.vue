@@ -3,7 +3,7 @@
     <nav class="navbar is-dark">
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item">
-          <img src="./assets/logo-no-background.svg" alt="">
+          <img src="./assets/white-and-gold.png" alt="">
         </router-link>
 
         <a class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu"
@@ -15,18 +15,28 @@
       </div>
       <div class="navbar-menu" id="navbar-menu" :class="{'is-active': showMobileMenu}">
         <div class="navbar-end">
-          <router-link to="" class="navbar-item">Link 1</router-link>
-          <router-link to="" class="navbar-item">Link 2</router-link>
-
-          <div class="navbar-item has-dropdown is-hoverable">
+          <div class="navbar-item mr-4">
+            <form action="/search" method="get">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" type="text" placeholder="Find a product" name="query">
+                </div>
+                <div class="control">
+                  <button class="button is-gold" type="submit">
+                    <font-awesome-icon icon="fa-solid fa-search"/>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="navbar-item has-dropdown is-hoverable mr-4">
             <a class="navbar-link">
               Categories
             </a>
-
             <div class="navbar-dropdown">
               <div class="navbar-item dropdown-item" v-for="category in allCategories" :key="category.id">
                 <div class="cats">
-                  <router-link :to="category.get_absolute_url" class="cat-name">
+                  <router-link :to="category.get_absolute_url" class="cat-name is-primary">
                     {{ category.name }}
                   </router-link>
                   <span class="cat-products-count has-text-success">
@@ -39,13 +49,13 @@
 
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/log-in" class="button is-light">
+              <router-link to="/log-in" class="button is-success">
                 <font-awesome-icon icon="fa-solid fa-user"/>
                 <span class="px-2">
                   Log in
                 </span>
               </router-link>
-              <router-link to="/cart" class="button is-success">
+              <router-link to="/cart" class="button is-gold">
                 <font-awesome-icon icon="fa-solid fa-cart-shopping"/>
                 <span style="margin-left: 10px">Cart ({{ cartTotalLength }})</span>
               </router-link>
@@ -209,6 +219,11 @@ $red: #ff2d55;
   &.is-loading {
     height: auto;
   }
+}
+
+.is-gold {
+  background: gold;
+  border: none;
 }
 
 </style>
