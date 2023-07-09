@@ -60,7 +60,6 @@ export default {
               dismissible: true,
             })
           })
-
       this.$store.commit('setIsLoading', false)
     }
   }
