@@ -49,12 +49,17 @@
 
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/log-in" class="button is-success">
-                <font-awesome-icon icon="fa-solid fa-user"/>
-                <span class="px-2">
+              <template v-if="$store.state.isAuthenticated">
+                <router-link to="/my-account" class="button is-light">My account</router-link>
+              </template>
+              <template v-else>
+                <router-link to="/log-in" class="button is-success">
+                  <font-awesome-icon icon="fa-solid fa-user"/>
+                  <span class="px-2">
                   Log in
                 </span>
-              </router-link>
+                </router-link>
+              </template>
               <router-link to="/cart" class="button is-gold">
                 <font-awesome-icon icon="fa-solid fa-cart-shopping"/>
                 <span style="margin-left: 10px">Cart ({{ cartTotalLength }})</span>
@@ -101,6 +106,12 @@ export default {
   },
   beforeCreate() {
     this.$store.commit('initializeStore')
+    const token = this.$store.state.token
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = "Token " + token
+    } else {
+      axios.defaults.headers.common['Authorization'] = ""
+    }
   },
   mounted() {
     this.cart = this.$store.state.cart
