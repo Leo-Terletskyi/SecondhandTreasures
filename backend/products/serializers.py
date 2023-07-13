@@ -6,10 +6,6 @@ from .models import Category, Product
 
 class ProductSerializer(serializers.ModelSerializer):
     image = VersatileImageFieldSerializer(sizes='product_image')
-    # image_full_size = serializers.SerializerMethodField()
-    image_thumbnail = serializers.SerializerMethodField()
-    """image_medium_square_crop = serializers.SerializerMethodField()
-    image_small_square_crop = serializers.SerializerMethodField()"""
     category_name = serializers.CharField(source='category.name')
 
     class Meta:
@@ -23,13 +19,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'price',
             'get_absolute_url',
             'image',
-            'image_thumbnail',
         ]
-
-    def get_image_thumbnail(self, product):
-        request = self.context.get('request')
-        photo_url = product.image.thumbnail['100x100']
-        return request.build_absolute_uri(photo_url)
 
 
 class CategorySerializer(serializers.ModelSerializer):

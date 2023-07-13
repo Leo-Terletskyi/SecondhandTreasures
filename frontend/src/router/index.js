@@ -4,11 +4,13 @@ import store from "@/store"
 import HomeView from '../views/HomeView.vue'
 import CategoryPage from "@/views/CategoryPage";
 import ProductPage from "@/views/ProductPage";
-import SearchVue from "@/views/SearchVue";
-import CartVue from "@/views/CartVue";
+import SearchView from "@/views/SearchView";
+import CartView from "@/views/CartView";
 import SignUp from "@/views/SignUp";
 import LogIn from "@/views/LogIn";
 import MyAccount from "@/views/MyAccount";
+import CheckoutView from "@/views/CheckoutView";
+import SuccessView from "@/views/SuccessView";
 
 const routes = [
     {
@@ -45,12 +47,25 @@ const routes = [
     {
         path: '/search',
         name: 'search',
-        component: SearchVue
+        component: SearchView
     },
     {
         path: '/cart',
         name: 'cart',
-        component: CartVue
+        component: CartView
+    },
+    {
+        path: '/cart/checkout',
+        name: 'checkout',
+        component: CheckoutView,
+        meta: {
+            requireLogin: true
+        }
+    },
+    {
+        path: '/cart/success',
+        name: 'success',
+        component: SuccessView
     },
     {
         path: '/:category_slug',

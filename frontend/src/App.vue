@@ -129,7 +129,7 @@ export default {
   methods: {
     async getAllCategories() {
       await axios
-          .get('/api/v1/all-categories')
+          .get('/api/v1/products/all-categories')
           .then(response => {
             this.allCategories = response.data
           })

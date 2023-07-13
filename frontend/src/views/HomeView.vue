@@ -39,7 +39,7 @@ export default {
       document.title = 'SecondhandTreasures'
       this.$store.commit('setIsLoading', true)
       await axios
-          .get('/api/v1/latest-products')
+          .get('/api/v1/products/latest-products')
           .then(response => {
             this.latestProducts = response.data
           })

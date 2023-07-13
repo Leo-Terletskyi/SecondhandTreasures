@@ -22,7 +22,7 @@ import ProductCard from "@/components/ProductCard";
 import {toast} from "bulma-toast";
 
 export default {
-  name: "SearchVue",
+  name: "SearchView",
   components: {
     ProductCard,
   },
@@ -45,7 +45,7 @@ export default {
     async performSearch() {
       document.title = `category: ${this.category}`
       this.$store.commit('setIsLoading', true)
-      await axios.post('/api/v1/search/', {'query': this.query})
+      await axios.post('/api/v1/products/search/', {'query': this.query})
           .then(response => {
             this.products = response.data
           })
