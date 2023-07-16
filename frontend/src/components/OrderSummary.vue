@@ -1,17 +1,18 @@
 <template>
-  <div class="box mb-4">
+  <div class="card mt-4 p-1">
     <h3 class="is-size-4 mb-6">Order #{{ order.id }}</h3>
     <h4 class="is-size-5">Products</h4>
-    <table class="table is-fullwidth">
-      <thead>
+    <div class="table-container">
+      <table class="table">
+        <thead>
         <tr>
           <th>Product</th>
           <th>Price</th>
           <th>Quantity</th>
           <th>Total</th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         <tr
             v-for="item in order.items"
             :key="item.product.id"
@@ -21,8 +22,9 @@
           <td>{{ item.quantity }}</td>
           <td>${{ getItemTotal(item).toFixed(2) }}</td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 

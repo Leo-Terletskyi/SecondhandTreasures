@@ -50,6 +50,7 @@
 
 <script>
 import axios from "axios";
+import {toast} from 'bulma-toast';
 
 import CartItem from "@/components/CartItem";
 
@@ -60,11 +61,16 @@ export default {
     return {
       cart: {
         items: []
-      }
+      },
+      productsList: [],
+      checkedProducts: [],
     }
   },
-  mounted() {
+  async mounted() {
     this.cart = this.$store.state.cart
+    await this.getProductsForCheck()
+    await this.getProductsList()
+    await this.confirmCheckProducts()
   },
   computed: {
     cartTotalLength() {
@@ -81,8 +87,58 @@ export default {
   methods: {
     removeFromCart(item) {
       this.cart.items = this.cart.items.filter(i => i.product.id !== item.product.id)
+    },
+    getProductsForCheck() {
+      const rawObject = JSON.parse(JSON.stringify(this.cart.items))
+      for (let item of rawObject) {
+        this.productsList.push(item.product.slug)
+      }
+    },
+    confirmCheckProducts() {
+      if (this.cart.items.length === 0) {
+        return
+      }
+      this.checkedProducts.forEach((i) => {
+        let copyOfCart = this.cart.items.slice()
+        for (let tmp = 0; tmp < copyOfCart.length; tmp++) {
+          if (i.id === copyOfCart[tmp].product.id) {
+            if (i.quantity <= 0) {
+              this.removeFromCart(copyOfCart[tmp])
+              localStorage.setItem('cart', JSON.stringify(this.cart))
+              toast({
+                message: `Sorry, but product ${copyOfCart[tmp].product.name} is out of stock`,
+                type: "is-warning",
+                position: "center",
+                duration: 8000,
+                pauseOnHover: true,
+                dismissible: true,
+              })
+            } else if (i.quantity < copyOfCart[tmp].quantity) {
+              this.cart.items[tmp].quantity = i.quantity
+              localStorage.setItem('cart', JSON.stringify(this.cart))
+              toast({
+                message: `hurry, only ${i.quantity} units of the product ${i.name} are left`,
+                type: "is-warning",
+                position: "center",
+                duration: 8000,
+                pauseOnHover: true,
+                dismissible: true,
+              })
+            }
+          }
+        }
+      })
+    },
+    async getProductsList() {
+      await axios.post('/api/v1/products/check/check/check-products/', {'productsList': this.productsList})
+          .then(response => {
+            this.checkedProducts = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
     }
-  }
+  },
 }
 </script>
 

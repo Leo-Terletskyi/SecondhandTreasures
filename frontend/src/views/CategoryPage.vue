@@ -5,7 +5,7 @@
       <h4 class="title is-4">Latest products in category <span style="color: green">{{ category }}:</span></h4>
     </div>
     <div class="page__body">
-      <div class="columns is-multiline is-desktop">
+      <div class="columns is-multiline is-mobile">
         <ProductCard
           v-for="product in products"
           :key="product.id"

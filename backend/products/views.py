@@ -11,9 +11,28 @@ from .serializers import CategorySerializer, ProductSerializer
 
 class AllProducts(APIView):
     def get(self, request):
-        products = Product.objects.all()
+        products = Product.objects.filter(quantity__gt=0)
         product_serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(product_serializer.data)
+
+
+class CheckProducts(APIView):
+    def get(self, request):
+        products_list = request.data.get('productsList', '')
+        if products_list:
+            products = Product.objects.filter(slug__in=products_list, quantity__gt=0)
+            product_serializer = ProductSerializer(products, many=True, context={'request': request})
+            return Response(product_serializer.data)
+
+
+@api_view(['POST'])
+def check_products(request):
+    products_list = request.data.get('productsList')
+    if products_list:
+        products = Product.objects.filter(slug__in=products_list)
+        product_serializer = ProductSerializer(products, many=True, context={'request': request})
+        return Response(product_serializer.data)
+    return Response({'productsList': []})
 
 
 class AllCategories(APIView):
@@ -25,7 +44,7 @@ class AllCategories(APIView):
 
 class LatestProducts(APIView):
     def get(self, request):
-        products = Product.objects.all()[:10]
+        products = Product.objects.filter(quantity__gt=0)[:10]
         serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -60,7 +79,7 @@ class CategoryDetail(APIView):
 def search_products(request):
     query = request.data.get('query', '')
     if query:
-        products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        products = Product.objects.filter(quantity__gt=0).filter(Q(name__icontains=query) | Q(description__icontains=query))
         serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data)
     return Response({'products': []})

@@ -30,6 +30,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    quantity = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     image = VersatileImageField(upload_to='images/', ppoi_field='image_ppoi')
     image_ppoi = PPOIField()

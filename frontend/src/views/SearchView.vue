@@ -4,7 +4,7 @@
       <h2 class="title is-2">search by query <span style="color: gold">{{ query }}</span>:</h2>
     </div>
     <div class="page__body">
-      <div class="columns is-multiline is-desktop">
+      <div class="columns is-multiline is-mobile">
         <ProductCard
             v-for="product in products"
             :key="product.id"
@@ -40,6 +40,7 @@ export default {
       this.query = params.get('query')
       this.performSearch()
     }
+    document.title = `search '${this.query}'`
   },
   methods: {
     async performSearch() {

@@ -1,6 +1,5 @@
 <template>
-  <div class="page-my-account">
-    <div class="columns is-multiline">
+    <div class="columns is-multiline is-mobile">
       <div class="column is-12">
         <h1 class="title">My account</h1>
       </div>
@@ -17,7 +16,6 @@
         />
       </div>
     </div>
-  </div>
 </template>
 
 

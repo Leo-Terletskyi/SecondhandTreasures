@@ -13,19 +13,16 @@
         {{ item.quantity }}
       </span>
       <a @click="decrementQuantity(item)" class="has-text-primary">
-        <font-awesome-icon icon="fa-solid fa-minus" />
+        <font-awesome-icon icon="fa-solid fa-minus"/>
       </a>
       <span></span>
-      <a @click="incrementQuantity(item)" class="has-text-primary pl-4">
-        <font-awesome-icon icon="fa-solid fa-plus" />
-      </a>
     </td>
     <td>
       ${{ getItemTotal(item).toFixed(2) }}
     </td>
     <td>
       <button @click="removeFromCart(item)" class="has-background-danger">
-        <font-awesome-icon icon="fa-solid fa-delete-left" />
+        <font-awesome-icon icon="fa-solid fa-delete-left"/>
       </button>
     </td>
   </tr>
@@ -55,10 +52,6 @@ export default {
         this.$emit('removeFromCart', item)
       }
 
-      this.updateCart()
-    },
-    incrementQuantity(item) {
-      item.quantity += 1
       this.updateCart()
     },
     updateCart() {

@@ -33,8 +33,11 @@
               <div class="add-to-cart__input">
                 <input class="input" type="number" min="1" v-model="quantity">
               </div>
-              <div class="add-to-cart__button">
+              <div class="add-to-cart__button" v-if="product.quantity > productsAdded">
                 <button type="button" class="button is-success" @click="addToCart">Add to cart</button>
+              </div>
+              <div class="add-to-cart__button" v-else>
+                <button type="button" class="button is-dark">the product is out of stock</button>
               </div>
             </div>
           </div>
@@ -53,13 +56,18 @@ export default {
   name: "ProductPage",
   data() {
     return {
+      cart: {
+        items: []
+      },
       product: {},
       image: '',
-      quantity: 1
+      quantity: 1,
+      productsAdded: 0
     }
   },
-  mounted() {
-    this.getProduct()
+  async mounted() {
+    await this.getProduct()
+    await this.getCorrectQuantityCart()
   },
   methods: {
     async getProduct() {
@@ -80,6 +88,14 @@ export default {
       this.$store.commit('setIsLoading', false)
       console.log(this.$store.state.isLoading)
     },
+    getCorrectQuantityCart() {
+      this.cart = this.$store.state.cart
+      this.cart.items.forEach((i) => {
+        if (i.product.id === this.product.id) {
+          this.productsAdded = i.quantity
+        }
+      })
+    },
     addToCart() {
       if (isNaN(this.quantity) || this.quantity < 1) {
         this.quantity = 1
@@ -88,6 +104,10 @@ export default {
         product: this.product,
         quantity: this.quantity
       }
+      if (item.product.quantity < item.quantity) {
+        item.quantity = item.product.quantity
+      }
+      this.productsAdded += this.quantity
       this.$store.commit('addToCart', item)
       toast({
         message: 'The product was added to the cart',
