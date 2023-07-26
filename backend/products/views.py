@@ -6,12 +6,12 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
+from .serializers import AllCategoriesSerializer, CategorySerializer, ProductSerializer
 
 
 class AllProducts(APIView):
     def get(self, request):
-        products = Product.objects.filter(quantity__gt=0)
+        products = Product.objects.select_related('category').filter(quantity__gt=0)
         product_serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(product_serializer.data)
 
@@ -20,7 +20,7 @@ class CheckProducts(APIView):
     def get(self, request):
         products_list = request.data.get('productsList', '')
         if products_list:
-            products = Product.objects.filter(slug__in=products_list, quantity__gt=0)
+            products = Product.objects.select_related('category').filter(slug__in=products_list, quantity__gt=0)
             product_serializer = ProductSerializer(products, many=True, context={'request': request})
             return Response(product_serializer.data)
 
@@ -29,7 +29,7 @@ class CheckProducts(APIView):
 def check_products(request):
     products_list = request.data.get('productsList')
     if products_list:
-        products = Product.objects.filter(slug__in=products_list)
+        products = Product.objects.select_related('category').filter(slug__in=products_list)
         product_serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(product_serializer.data)
     return Response({'productsList': []})
@@ -38,13 +38,13 @@ def check_products(request):
 class AllCategories(APIView):
     def get(self, request):
         categories = Category.objects.all()
-        category_serializer = CategorySerializer(categories, many=True, context={'request': request})
+        category_serializer = AllCategoriesSerializer(categories, many=True, context={'request': request})
         return Response(category_serializer.data)
 
 
 class LatestProducts(APIView):
     def get(self, request):
-        products = Product.objects.filter(quantity__gt=0)[:10]
+        products = Product.objects.select_related('category').filter(quantity__gt=0)[:10]
         serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -52,10 +52,10 @@ class LatestProducts(APIView):
 class ProductDetail(APIView):
     def get_object(self, category_slug, product_slug):
         try:
-            return Product.objects.filter(category__slug=category_slug).get(slug=product_slug)
+            return Product.objects.select_related('category').filter(category__slug=category_slug).get(slug=product_slug)
         except Product.DoesNotExist:
             raise Http404
-
+    
     def get(self, request, category_slug, product_slug):
         product = self.get_object(category_slug, product_slug)
         serializer = ProductSerializer(product, context={'request': request})
@@ -68,7 +68,7 @@ class CategoryDetail(APIView):
             return Category.objects.get(slug=category_slug)
         except Category.DoesNotExist:
             raise Http404
-
+    
     def get(self, request, category_slug):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category, context={'request': request})
@@ -79,7 +79,8 @@ class CategoryDetail(APIView):
 def search_products(request):
     query = request.data.get('query', '')
     if query:
-        products = Product.objects.filter(quantity__gt=0).filter(Q(name__icontains=query) | Q(description__icontains=query))
+        products = Product.objects.select_related('category').filter(quantity__gt=0).filter(
+            Q(name__icontains=query) | Q(description__icontains=query))
         serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data)
     return Response({'products': []})

@@ -7,7 +7,7 @@ from .models import Category, Product
 class ProductSerializer(serializers.ModelSerializer):
     image = VersatileImageFieldSerializer(sizes='product_image')
     category_name = serializers.CharField(source='category.name')
-
+    
     class Meta:
         model = Product
         fields = [
@@ -24,15 +24,28 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True)
-    products_count = serializers.IntegerField(source='products.count')
-
+    products = serializers.SerializerMethodField()
+    
     class Meta:
         model = Category
         fields = [
             'id',
             'name',
             'get_absolute_url',
-            'products_count',
             'products',
+        ]
+    
+    def get_products(self, obj):
+        products = Product.objects.select_related('category').filter(category=obj)
+        serializer = ProductSerializer(instance=products, many=True, context=self.context)
+        return serializer.data
+
+
+class AllCategoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = [
+            'id',
+            'name',
+            'get_absolute_url',
         ]

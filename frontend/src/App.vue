@@ -36,17 +36,13 @@
             <div class="navbar-dropdown">
               <div class="navbar-item dropdown-item" v-for="category in allCategories" :key="category.id">
                 <div class="cats">
-                  <router-link :to="category.get_absolute_url" class="cat-name is-primary">
+                  <router-link :to="category.get_absolute_url" class="cat-name is-danger">
                     {{ category.name }}
                   </router-link>
-                  <span class="cat-products-count has-text-success">
-                      {{ category.products_count }}
-                    </span>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="navbar-item">
             <div class="buttons">
               <template v-if="$store.state.isAuthenticated">
